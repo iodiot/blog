@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elegant Whitespace — Mike Smahin</title>
+<meta name="description" content="Where philosophers of old loved to pen with a stick? treatises on the relation between the material and the ideal, the concrete and the abstract, asked question">
+<link rel="canonical" href="https://iodiot.github.io/blog/elegant-whitespace/">
+<link rel="alternate" hreflang="ru" href="https://iodiot.github.io/blog/ru/elegant-whitespace/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/">← All posts</a></p>
+    <h1>Elegant Whitespace</h1>
+    <p class="meta-line"><time datetime="2008-02-11">Feb 11, 2008</time></p>
+    <ul class="tags"><li class="topic">programming</li><li>thoughts</li><li>philosophy</li></ul>
+    <div class="links"><a class="btn" href="/blog/ru/elegant-whitespace/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/24655.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+    <p class="note">Translated from Russian. Originally published on Feb 11, 2008 as “Изящный пробел”.</p>
+  </header>
+  <div class="prose"><p>Where philosophers of old loved to pen (with a stick?) treatises on the relation between the material and the ideal, the concrete and the abstract, asked questions like &quot;is there a god under the moon&quot; or &quot;how finite is the infinite&quot;, singled out concepts and built ontologies… today's new philosophers — the philosophers of programming — have simply flooded the rubber Internet with articles on project management, on applying design patterns, on how sensible OOP principles are, on their language preferences and, finally, on programming styles. Let's talk about the last of these.</p>
+<p>It's funny: if you think about it, a programming style is just a set of rules for placing ' ', '\n' and '\t'. Sometimes block delimiters such as '{' and '}' and naming rules get added. But the compiler, as we know, couldn't care less about style — unlike the poor tired programmers. I didn't write such a convoluted first paragraph for nothing, because I, too, read an article about programming in general that denounced pseudo-coders who neglect spaces and line breaks, and fanatics who start <em>holy wars</em> over such a subtle topic as… style! And so a thought appeared.</p>
+<p>Consider a classic example:</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span> int main() { int x; scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;x); if(x&gt;0) printf(<span class="hljs-string">&quot;hello\n&quot;</span>); return 0; }</span>
+</code></pre>
+<p>Everything looks familiar, yet something is off — the cherished staircase of indentation is missing. The example is exaggerated, but it works. Of course, only the most desperate guys write everything on one line; the rest just quietly add an extra space here and there, forget about tabs, and give variables absurd names. That's the root of the problem: because of trivial formatting, the time it takes to make sense of someone else's code grows by an order of magnitude.</p>
+<p>For example, I know perfectly well that a <strong>C/C++</strong> compiler will never manage code like this:</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-keyword">if</span> a &gt; b {
+    a = b;
+}
+</code></pre>
+<p>Right — the parentheses around the condition are missing, and so every programmer is obliged to put them in, unless of course he writes code for some masochistic reasons. Let's extend the idea and ask ourselves: why not formalize style itself and forbid redundant lexical constructs, such as this one:</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-keyword">if</span>(a &gt; b) a = b;
+</code></pre>
+<p>Let this code now fail to compile because there's no space between &quot;if&quot; and '('. It should also be required that the statements after a condition, even if there is only one, be enclosed in a block — we know what such negligence can sometimes lead to. In other words, code like this should always look like this (or at least produce a <em>warning</em>):</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-keyword">if</span> (a &gt; b) {
+    a = b;
+}
+</code></pre>
+<p>And there's nothing terrible about that. It's not an infringement of rights or the collapse of democratic foundations — quite the opposite, it's care for the person who may one day look into your code. Is it really that hard to ALWAYS write constants in capital letters, indent properly, give variables sane names, separate operands from operators… Style rules are usually described in the documentation by the developers of the language themselves. At one point I looked through the <em>Java and C/C++ code conventions</em>, changed my habits a little, and it was all for the better, honest.</p>
+<p>By the way, the developers of <strong>Python</strong> have historically held a similar view. Quote: <em>&quot;One of the interesting syntactic features of the language is that code blocks are delimited by indentation (spaces or tabs), so Python has no begin/end statement brackets as in Pascal, nor curly braces as in C. This 'trick' noticeably reduces the number of lines and characters in a program.&quot;</em> An example and all the details are at the <a href="http://ru.wikipedia.org/wiki/Python" target="_blank" rel="noopener">link</a>.</p>
+<p>Natural languages have similar problems too. Just the other day <a href="https://miri_on_air.livejournal.com/" target="_blank" rel="noopener">miri_on_air</a> and I were talking about the usefulness or uselessness of the Russian letter <strong>Ё</strong>. And I don't understand why the letter Ё should be thrown in the trash if, at the very least, it improves the readability of a text. Especially since in speech Ё is always pronounced — so why this discrepancy between writing and speech? In short, I'm for making Ё mandatory by rule, by analogy with all of the above.</p>
+<p><strong>[update]</strong> It wouldn't hurt to introduce standards for smileys too — I'm sick of the retrograde bracket-folk with a single ')' and the &quot;metrograde&quot; folk with the extended &quot;:-)&quot; version. Just kidding, but the first variant should be banned so we stop seeing such frequent bracket parades as &quot;)))))))&quot;.</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/ru/elegant-whitespace/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/24655.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+  <nav class="pager"><a href="/blog/whats-in-your-number/">← What's in Your Number?</a><a href="/blog/mathematical-freedom/">Mathematical Freedom →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

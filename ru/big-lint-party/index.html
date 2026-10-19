@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Big lint party — Mike Smahin</title>
+<meta name="description" content="Количество обычно редко идёт в ногу с качеством. И код, как главный продукт индустрии программирования, уж точно не является исключением, тем более C/C++ код. Э">
+<link rel="canonical" href="https://iodiot.github.io/blog/ru/big-lint-party/">
+<link rel="alternate" hreflang="en" href="https://iodiot.github.io/blog/big-lint-party/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/ru/">← Все записи</a></p>
+    <h1>Big lint party</h1>
+    <p class="meta-line"><time datetime="2008-04-27">27 апреля 2008</time></p>
+    <ul class="tags"><li class="topic">программирование</li><li>интересное</li><li>программинг</li><li>софт</li><li>текст</li></ul>
+    <div class="links"><a class="btn" href="/blog/big-lint-party/">English version</a><a class="btn" href="https://iodiot.livejournal.com/29437.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+    
+  </header>
+  <div class="prose"><p>Количество обычно редко идёт в ногу с качеством. И код, как главный продукт индустрии программирования, уж точно не является исключением, тем более C/C++ код. Эх!.. сколько ошибок успел я повидать и сколько ещё меня ожидают.</p>
+<p>Когда-то во FreeBSD я обнаружил интересную утилиту lint. В справке говорилось, что это поистине замечательная программа, которая поможет дословно: <em>keep</em> <em>your</em> <em>C</em> <em>code</em> <em>lint</em> <em>clean</em>.  Теперь я уже понимаю смысл упомянутых слов, потому что lint — это высшая степень чистоты C-кода. Утилита позволяла отлавливать любые неоднозначные конструкции: стрёмную передачу указателей, отсутствие той или иной инициализации, неявное приведение типов и т.д. и т.п. Странно, что lint не входит в стандартные реализации компиляторов. Писать lint clean code, конечно же, сложно, но ведь и первый <strong>hello world\n</strong> требовал известных усилий.</p>
+<p>Всё хорошо, но lint отказывался понимать С++ код, и это было печально, хотя и ожидаемо. И вот только сегодня на просторах я с радостью обнаружил программу <a href="http://www.gimpel.com/html/products.htm" target="_blank" rel="noopener">PC Lint</a>, которая проверяет С/C++ код и которая обзавелось кучей новых возможностей. Программа не бесплатная, но вот по <a href="http://gimpel-online.com/cgi-bin/genPage.py?srcFile=diy.cpp&amp;cgiScript=analyseCode.py&amp;title=Blank+Slate+%28C%2B%2B%29+&amp;intro=An+empty+page+in+which+to+write+your+own+C%2B%2B+code.&amp;compilerOption=co-gcc.lnt+co-gnu3.lnt&amp;includeOption=%7B%7BquotedIncludeOption%7D%7D" target="_blank" rel="noopener">этой</a> ссылке доступна форма для тестовой проверки вашего кода. Кстати, на сайте ещё присутствует занятный раздел <a href="http://www.gimpel.com/html/bugs.htm" target="_blank" rel="noopener">bug of the month</a>.</p>
+<p><img src="/blog/images/big-lint-party-1.gif" alt="" loading="lazy"></p>
+<p>Это ещё не всё. В книге *«*<em>Expert</em> <em>C</em> <em>programming»</em> (Linden) я когда-то вычитал небольшой рассказ под громким названием <strong>The SunOS Lint Party</strong>. Дословно:</p>
+<p>The SunOS development team is justly proud of our lint-clean kernel. We'd paid a lot of attention to getting the 4.x kernel to pass through lint with no errors, and we kept it that way. When we changed our source base from BSD UNIX to SVR4 in 1991, we inherited new kernel whose lint status was unknown. We decided to lint the SVR4 kernel.</p>
+<p>This activity took place over several weeks and was known as the &quot;lint party.&quot; It yielded about 12,000 unique lint warnings, each of which had to be investigated and corrected manually. By the end, changes had been made to about 750 source files, and the task had become known as &quot;the lint merge from hell&quot;. Most of the lint messages just needed an explicit cast, or lint comment, but there were several real bugs shaken out by the process:</p>
+<ul>
+<li>Argument types transposed between function and call.</li>
+<li>A function that was passed one argument, but expected three, and took junk off the stack. Finding this cured an intermittent data corruption problem in the streams subsystem. \</li>
+<li>Variables used before being set.</li>
+</ul>
+<p>The value is not just in removing existing bugs, but in preventing new bugs from contaminating the source base. We now keep the kernel lint-clean by requiring all source changes or additions to be run through lint and cstyle. In this way we have not only removed existing bugs, but are reducing the number of future bugs as well.</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/big-lint-party/">English version</a><a class="btn" href="https://iodiot.livejournal.com/29437.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+  <nav class="pager"><a href="/blog/ru/mathematical-freedom/">← Математическая свобода</a><a href="/blog/ru/program-evolution/">Program evolution →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

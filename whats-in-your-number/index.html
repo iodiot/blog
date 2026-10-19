@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What's in Your Number? — Mike Smahin</title>
+<meta name="description" content="I wonder whether anyone has tried to statistically analyze the numbers LiveJournal assigns to new posts. Never mind. I'll give it a try : My journal has only 60">
+<link rel="canonical" href="https://iodiot.github.io/blog/whats-in-your-number/">
+<link rel="alternate" hreflang="ru" href="https://iodiot.github.io/blog/ru/whats-in-your-number/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/">← All posts</a></p>
+    <h1>What's in Your Number?</h1>
+    <p class="meta-line"><time datetime="2008-01-05">Jan 5, 2008</time></p>
+    <ul class="tags"><li class="topic">mathematics</li><li>LiveJournal</li><li>math</li><li>statistics</li></ul>
+    <div class="links"><a class="btn" href="/blog/ru/whats-in-your-number/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/18998.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+    <p class="note">Translated from Russian. Originally published on Jan 5, 2008 as “Что в номере твоём?”.</p>
+  </header>
+  <div class="prose"><p><strong>I wonder</strong> whether anyone has tried to statistically analyze the numbers LiveJournal assigns to new posts. Never mind. I'll give it a try :)</p>
+<p>My journal has only 60-odd posts; the link to the second-to-last one looks like this: <em><a href="http://iodiot.livejournal.com/18857.html" target="_blank" rel="noopener">http://iodiot.livejournal.com/18857.html</a></em>. Accordingly, this post's unique number is 18857. You've probably noticed that the numbers are fairly large. Most likely this was done on purpose, for the psychological comfort of bloggers — <em>usability</em>, so to speak.</p>
+<p>Post numbers increase monotonically but are not consecutive, i.e. the numbers of neighboring posts differ by <strong>more</strong> than one. That makes sense. Otherwise, say, I visit an unfamiliar journal, see the last two posts numbered 98 and 100, and can say almost for certain that between them (i.e. in that time interval) there is either a hidden post or an old one that was permanently deleted. <em>Privacy</em>, damn it.</p>
+<p>Closer to the point. Let's take the numbers of my last 50 posts; here they are:</p>
+<pre class="hljs"><code> 4795   4956   5194   5687   6132   6610   6717
+ 7074   7479   7699   8181   8446   8630   8951
+ 9034   9222   9617   9775  10237  10435  10547
+10863  11121  11399  11762  11814  12084  12337
+12761  13156  13378  13593  13988  14271  14433
+14672  15016  15277  15360  15831  15893  16230
+16581  16894  16998  17270  17974  18384  18540
+18857
+</code></pre>
+<p>I don't know what to do with these numbers. So let's take the differences between neighboring numbers; there are 49 of them:</p>
+<pre class="hljs"><code>161  238  493  445  478  107  357  405  220  482  265  184  321   83  188
+395  158  462  198  112  316  258  278  363   52  270  253  424  395  222
+215  395  283  162  239  344  261   83  471   62  337  351  313  104  272
+704  410  156  317
+</code></pre>
+<p>Now that's more interesting. Let's start simple: compute the maximum, minimum, mean, standard deviation and variance, and plot a histogram of the values:</p>
+<pre class="hljs"><code>max = 704
+min =  52
+mx  = 286.9796
+sx  = 136.0748
+dx  = 1.8516e+004
+</code></pre>
+<p>The <strong>max</strong> came out suspiciously large — I'll tell you a secret: I deleted some posts. By the way, the <strong>min</strong> is odd too. I also wonder why <strong>mx</strong>, the mean, is so large; maybe ideally it was the eighth power of two.</p>
+<p>Now let's build a histogram, which simply shows how many elements of the sample fall into each interval. Why? To test one assumption: that the LJ engine generates new post numbers like this — take the number of the latest post so far and add to it another number equal to rand(). And the <strong>hypothesis</strong> is that the generator, i.e. rand() itself, follows the <em>normal distribution</em> (the <strong>Gaussian</strong> distribution). A histogram proves nothing, of course, but it certainly visualizes:</p>
+<p><img src="/blog/images/whats-in-your-number-1.gif" alt="" loading="lazy"></p>
+<p>An ambiguous result. So let's unleash the <strong>Kolmogorov</strong> and <strong>Pearson</strong> tests, one after the other, to check our hypothesis. Reminder: we're testing for normality. The Kolmogorov test looks for the maximum difference between the empirical and theoretical distributions; here the difference equals 1, and <strong>Matlab</strong> says it's hopeless. Pearson agrees with it; here is the <em>output</em> for anyone interested:</p>
+<pre class="hljs"><code>test = 0
+stats =
+    chi2stat: 2.4727
+    df: 3
+    edges: [1x7 double]
+    O: [14 5 7 4 5 15]
+    E: [12.0782 6.0285 6.8087 6.8187 6.0550 12.2108]
+</code></pre>
+<p><strong>Summing up.</strong> The LiveJournal engine generates post numbers smartly: the <em>privacy</em> and <em>usability</em> tests are passed. But the hypothesis that LJ uses a random number generator following the <em>normal law</em> was not confirmed. Then again, the whole thing may be that the sample is weak and unrepresentative, and that historically deleted posts added their own variance…</p>
+<p><strong>[update]</strong> Together with <a href="https://amikhailov.livejournal.com/" target="_blank" rel="noopener">amikhailov</a> we found the algorithm that generates new post numbers. The trick is that it uses the sequential numbers of posts in the journal, i.e. 1, 2, 3... In short, here's the formula:</p>
+<pre class="hljs"><code class="language-c">post_number = (prev_post_order + <span class="hljs-number">1</span>) * <span class="hljs-number">256</span> + rand(<span class="hljs-number">256</span>);
+</code></pre>
+<p>In other words, take the sequential number of the previous post, add one, multiply by 256, and then add a random number from the range 0..255. For example, the numbers of the first and second posts will be 1·256 + rand(256) and 2·256 + rand(256), respectively.</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/ru/whats-in-your-number/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/18998.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+  <nav class="pager"><a href="/blog/philosophy-of-programs/">← The Philosophy of Programs</a><a href="/blog/elegant-whitespace/">Elegant Whitespace →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

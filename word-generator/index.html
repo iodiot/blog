@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Generator — Mike Smahin</title>
+<meta name="description" content="When people ask me about my favorite number, I always answer 23. And when the question is broadened to &quot;numbers&quot;, then of course it's the Fibonacci numbers. I c">
+<link rel="canonical" href="https://iodiot.github.io/blog/word-generator/">
+<link rel="alternate" hreflang="ru" href="https://iodiot.github.io/blog/ru/word-generator/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/">← All posts</a></p>
+    <h1>Word Generator</h1>
+    <p class="meta-line"><time datetime="2007-11-08">Nov 8, 2007</time></p>
+    <ul class="tags"><li class="topic">mathematics</li><li>computer science</li><li>math</li></ul>
+    <div class="links"><a class="btn" href="/blog/ru/word-generator/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/15277.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+    <p class="note">Translated from Russian. Originally published on Nov 8, 2007 as “Генератор слов”.</p>
+  </header>
+  <div class="prose"><p>When people ask me about my favorite number, I always answer 23. And when the question is broadened to &quot;numbers&quot;, then of course it's the <strong>Fibonacci</strong> numbers.</p>
+<p>I came across this problem:</p>
+<blockquote>
+<p><em>The automaton shown in the figure builds the words of a certain sequence. The initial state of the automaton is 1, and the accepting states are {1, 2}. Determine how many different words N(n) are accepted by the automaton, depending on the word length n.</em></p>
+<p><img src="/blog/images/word-generator-1.gif" alt="" loading="lazy"></p>
+</blockquote>
+<p>So only one word of length 1 can be produced — &quot;a&quot;; two words of length 2 — &quot;aa&quot; and &quot;ab&quot;; three words of length 3; five words of length 4...</p>
+<p>A child's problem. A generated word can end either in &quot;a&quot; or in &quot;b&quot;. In the latter case we can simply drop the final &quot;b&quot; and get a word of length n−1, and correspondingly N(n−1) variants. If the word ends in &quot;a&quot;, then the second-to-last symbol must also be &quot;a&quot;, so we can drop two symbols from the end and get N(n−2) variants. Hence</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>N</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo>=</mo><mi>N</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mi>N</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>N</mi><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>=</mo><mi>N</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">N(n) = N(n-1) + N(n-2), \qquad N(0) = N(1) = 1,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span></span></span></span></span></eqn></section><p>so the number of words of length n corresponds to the n-th Fibonacci number.</p>
+<p>Nothing special, really. But it's simply amazing in how many discrete problems (and not only discrete ones) you meet binomial coefficients, Bernoulli numbers, Euler numbers, and, once again, Fibonacci numbers.</p>
+<p>I strained my memory and recalled that in <strong>unix</strong> this automaton corresponds to the following regular expression: <strong>'\(a\+b\)\+'</strong>.</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/ru/word-generator/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/15277.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+  <nav class="pager"><a href="/blog/an-ordinary-series/">← An Ordinary Series</a><a href="/blog/philosophy-of-programs/">The Philosophy of Programs →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

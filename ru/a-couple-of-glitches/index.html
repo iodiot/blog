@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пара глюков — Mike Smahin</title>
+<meta name="description" content="Написал HTTP сервер . Потратил совсем немного времени, но над отдельными недочётами бьюсь уже которые сутки. Понятное дело: сервер получает данные из сокета. HT">
+<link rel="canonical" href="https://iodiot.github.io/blog/ru/a-couple-of-glitches/">
+<link rel="alternate" hreflang="en" href="https://iodiot.github.io/blog/a-couple-of-glitches/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/ru/">← Все записи</a></p>
+    <h1>Пара глюков</h1>
+    <p class="meta-line"><time datetime="2007-10-05">5 октября 2007</time></p>
+    <ul class="tags"><li class="topic">программирование</li><li>unix</li><li>программинг</li></ul>
+    <div class="links"><a class="btn" href="/blog/a-couple-of-glitches/">English version</a><a class="btn" href="https://iodiot.livejournal.com/10547.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+    
+  </header>
+  <div class="prose"><p>Написал <strong>HTTP сервер</strong>. Потратил совсем немного времени, но над отдельными недочётами бьюсь уже которые сутки.</p>
+<p>Понятное дело: сервер получает данные из сокета. HTTP протокол по определению является текстовым, т.е. в данных присутствуют символы перевода строки, EOF и всё такое. С помощью вызова fdopen() сокет можно превратить в поток и работать уже с ним с помощью функций fprintf(), fscanf(), fgets(). Это значительно упрощает дело, но вот скажите какого: fclose() по умолчанию прикрывает вместе с потоком также и дескриптор сокета. А закрывать нужно, потому что после того как в потоке данных встречается EOF, fread() уходит в глубокий sleep().</p>
+<p>Отдельная история связана с каналами или пайпами.  Они нужны для корректной реализации CGI интерфейса. Когда на сервер приходит запрос типа POST сервер должен вызвать соответствующую программу и передать через канал входные параметры и через него же прочитать сгенерированную страницу.  Везде в man pages написано, что каналы является двунаправленными, но всё равно работают только в одну сторону: сервер –&gt; клиент или клиент -&gt; сервер.  Выход заключается в использовании сразу двух каналов. Не знаю, может это дефект FreeBSD, но заставить одновременно писать/читать данные сервер мне так и не удалось.</p>
+<p>FreeBSD против Linux. Программа в первой работает, во второй уходит в Segmentation Fault. Например, закрытый дважды файл с помощью fclose() или вызов popen(), если ему передать не “r”, а сразу “r+”, ну не любит Linux двунаправленные каналы, не любит (хотя документация этого и не запрещает)…</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/a-couple-of-glitches/">English version</a><a class="btn" href="https://iodiot.livejournal.com/10547.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+  <nav class="pager"><a href="/blog/ru/magicicada/">← Magicicada</a><a href="/blog/ru/monkey-and-weight/">Обезьяна и груз →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

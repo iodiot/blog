@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Как нарисовать стену? — Mike Smahin</title>
+<meta name="description" content="Начнем с незамысловатого вопроса http://gamedev.stackexchange.com/questions/33203/good-resources-for-2-5d-and-rendering-walls-floors-and-sprites на gamedev.stac">
+<link rel="canonical" href="https://iodiot.github.io/blog/ru/how-to-draw-a-wall/">
+<link rel="alternate" hreflang="en" href="https://iodiot.github.io/blog/how-to-draw-a-wall/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/ru/">← Все записи</a></p>
+    <h1>Как нарисовать стену?</h1>
+    <p class="meta-line"><time datetime="2012-10-05">5 октября 2012</time></p>
+    <ul class="tags"><li class="topic">программирование</li><li>жизнь</li><li>игры</li><li>программинг</li></ul>
+    <div class="links"><a class="btn" href="/blog/how-to-draw-a-wall/">English version</a><a class="btn" href="https://iodiot.livejournal.com/43080.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+    
+  </header>
+  <div class="prose"><p>Начнем с незамысловатого <a href="http://gamedev.stackexchange.com/questions/33203/good-resources-for-2-5d-and-rendering-walls-floors-and-sprites" target="_blank" rel="noopener">вопроса</a> на <a href="http://gamedev.stackexchange.com/" target="_blank" rel="noopener">gamedev.stackexchange.com</a>:</p>
+<blockquote>
+<p>I'm curious as to how games like Prelude of the chambered handle graphics. If you play for a bit you will see what I mean. It made me wonder how it works. (it is open-source so you can get the source on This page) I did find a few tutorials but I couldn't undertand some of the stuff but it did help with some things. However, I don't like doing things I don't understand. Does anyone know of any good sites for this kind of 2.5D? Any help is appreciated. After all I've been googling all day. Thanks :)</p>
+</blockquote>
+<p>Aidan Mueller спрашивает, как были разработаны такие игры как <a href="http://s3.amazonaws.com/ld48/index.html" target="_blank" rel="noopener">Prelude of the Chambered</a> (PoC), и просит поделиться ссылками по теме. Кстати это интересная игра сама по себе. Она была написана Нотчем, создателем игры Minecraft, за 48 часов в ходе конкурса под названием Ludum Dare. Если вы еще не играли, то крайне советую, тем более игра с одной стороны короткая, а с другой увлекательная. В свое время меня тоже заинтересовал PoC с технологической точки зрения, и я начал погружаться в дикий и опасный мир программных рендеров.</p>
+<p>Тогда мне было интересно дойти до всего самостоятельно, и я игнорировал оригинальные исходные коды. В скором времени мне под руку подвернулась замечательная <a href="http://lodev.org/cgtutor/raycasting.html" target="_blank" rel="noopener">статья</a> про рейкастинг, метод рендеринга, который позволял создать 3D перспективу на двумерной карте. Этот же подход в том или ином виде использовался в игре Wolfenstein. В тот момент мне показалось, что этого будет достаточно, чтобы реализовать все, что было в PoC. Но я ошибался.</p>
+<p>Вся проблема заключалась в том, что рендер PoC`а поддерживал такие объекты как двери. Двери не в виде плоских спрайтов, а настоящие двери в виде блоков ассиметричной формы:</p>
+<p><img src="/blog/images/how-to-draw-a-wall-1.png" alt="door" loading="lazy"></p>
+<p>Это было непосильной задачей для простого рейкастера. Я пытался придумать способ как можно было бы хакнуть и заставить все-таки его отображать приятные глазу двери, но любой способ оказывался или слишком сложным или слишком дурацким. С рейкастером было покончено, и я решился заглянуть в оригинальные исходные коды.</p>
+<p>Итак, функция <em>RenderWall</em>. Она была альфой и омегой всего рендера и предназначалась для рендеринга текстурированной стены в произвольном месте, заданном двумя двумерными координатами. Именно благодаря этой функции движок был способен рендерить блоки произвольной формы, включая многострадальные двери. Скажу честно, я потратил немало времени, чтобы дойти до всей математики самостоятельно, но сейчас, по прошествии времени, я уверен, что это всецело того стоило. Для начала упрощенный <a href="https://gist.github.com/db54a3c62c6d42a5d6a6" target="_blank" rel="noopener">листинг</a> из моего проекта. </p>
+<p>Что происходит? По шагам:</p>
+<ol>
+<li>
+<p>Перевод координат стены в систему координат игрока\</p>
+</li>
+<li>
+<p>Отсечение невидимых участков стены\</p>
+</li>
+<li>
+<p>Проекция стены на картинную плоскость (почти)\</p>
+</li>
+<li>
+<p>Растеризация и текстурирование стены</p>
+</li>
+<li>
+<p>Рендерить стены есть смысл лишь с точки зрения игрока. Для это и нужен переход из одной системы координат в другую. Игрок имеет три степени свободы (XY-координаты на карте и угол поворота относительно оси oX), поэтому для перехода достаточно вычесть координаты игрока и развернуть на соотвествующий угол. Графически это выглядит так:</p>
+</li>
+</ol>
+<p><img src="/blog/images/how-to-draw-a-wall-2.png" alt="into-view-frame" loading="lazy"></p>
+<ol start="2">
+<li>
+<p>Как рендерить участки стен, которые находятся между игроком и экраном (см. схему нижу)? Правильно: никак. Для этого и нужно отсечение. В противном случае получите ужасные графические артефакты.</p>
+</li>
+<li>
+<p>Обычно в компьютерной графике под проецированием подразумевают процесс отображения трехмерных примитивов в двумерные на картинную плоскость. В нашем случае мы проецируем двумерные отрезки на экран. В итоге получаем пару точек. Для создания 3D перспективы этого недостаточно, хотя бы потому что все стены всегда будут одной высоты. Соответственно нужно что-то еще, а именно глубина, или расстояние данной точки от камеры. Рассмотрим схему:</p>
+</li>
+</ol>
+<p><img src="/blog/images/how-to-draw-a-wall-3.png" alt="projection" loading="lazy"></p>
+<p>Треугольник, который отмечен значком прямого угла, делится зеленым отрезком на два подобных треугольника. Соответственно можно выписать следующие формулы:</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><msup><mi>x</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mi>d</mi></mfrac><mo>=</mo><mfrac><mi>x</mi><mi>z</mi></mfrac><mo separator="true">;</mo><mspace width="1em"/><msup><mi>x</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mi>d</mi><mtext> </mtext><mfrac><mi>x</mi><mi>z</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{x&#x27;}{d} = \frac{x}{z}; \quad x&#x27; = d\,\frac{x}{z}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.1149em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4289em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.7936em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.7936em;vertical-align:-0.686em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></eqn></section><p>где d — расстояние от игрока до экрана, x’ — координата крайний точки стены после проецирования, а z — глубина. В листинге за d отвечает константа <em>nearPlaneDistance</em>.</p>
+<ol start="4">
+<li>Растеризация — процесс получения растрового изображения. Стена является четырехугольником и ограничена [<em>startX</em>, <em>endX</em>] по оси oX. Соотвественно мы должны пройти в цилке все точки по горизонтали и для каждой из нее определить текущую высоту стены с помощью линейной интерполяции между <em>lineHeight1</em> и <em>lineHeight2</em>, не забывая про тест на глубину. Остается лишь получить нужные тексель и вывести его на экран.</li>
+</ol>
+<p>Важно отметить, что для рендеринга спрайтов, т.е. различных плоских объектов игрового мира типа противников, изобретать велосипед не нужно. Достаточно небольших модификаций уже готовой функции <em>RenderWall</em>. Правда это не касается полов и потолков, их нужно рендерить по другому принципу, но об этом в другой раз.</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/how-to-draw-a-wall/">English version</a><a class="btn" href="https://iodiot.livejournal.com/43080.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+  <nav class="pager"><a href="/blog/ru/how-do-you-use-your-gpu/">← А как вы используете свой GPU?</a><a href="/blog/ru/mark-v-shaney/">Mark V. Shaney →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

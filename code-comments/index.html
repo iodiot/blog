@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>// the below code needs to be commented out — Mike Smahin</title>
+<meta name="description" content="So, comments in source code They don't matter to the compiler, but they matter to a living human being: they serve as a guiding thread through the convoluted wo">
+<link rel="canonical" href="https://iodiot.github.io/blog/code-comments/">
+<link rel="alternate" hreflang="ru" href="https://iodiot.github.io/blog/ru/code-comments/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/">← All posts</a></p>
+    <h1>// the below code needs to be commented out</h1>
+    <p class="meta-line"><time datetime="2012-10-17">Oct 17, 2012</time></p>
+    <ul class="tags"><li class="topic">programming</li></ul>
+    <div class="links"><a class="btn" href="/blog/ru/code-comments/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/45067.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+    <p class="note">Translated from Russian. Originally published on Oct 17, 2012 as “// the below code needs to be commented out”.</p>
+  </header>
+  <div class="prose"><p>So, comments in source code! They don't matter to the compiler, but they matter to a living human being: they serve as a guiding thread through the convoluted world of operators, functions and classes. Code richly sprinkled with comments shines with clarity and reason, and there's an opinion that you can never have too many comments. Or can you? It's worth figuring out.</p>
+<p>It should be noted that nothing said above or below claims any scientific novelty. Dozens of excellent essays, blog posts, forum messages and even book chapters have been written about comments. Practically every well-known programmer has spoken out on the subject. And even I, if memory serves, have already written about it once, although all hundred billion of my neurons refuse to remember it.</p>
+<p>Any serious study should begin with a historical digression. Without doubt the most famous comment was left by Pierre de Fermat in the margin of Diophantus's <em>Arithmetica</em>:</p>
+<blockquote>
+<p>On the contrary, it is impossible to separate a cube into two cubes, or a fourth power into two fourth powers, or in general any power higher than the second into two like powers. I have discovered a truly marvelous proof of this, which this margin is too narrow to contain.</p>
+</blockquote>
+<p>Fermat was spot on: it took Andrew Wiles half his life and several volumes of mathematical derivations to finally prove that jaw-breaking theorem.</p>
+<p>But back to the original question. Can there be too many comments? Can you overdo this noble pursuit? Of course:</p>
+<pre class="hljs"><code class="language-csharp"><span class="hljs-comment">// This method takes two integer values and adds them together via the built-in</span>
+<span class="hljs-comment">// .NET functionality. It would be possible to code the arithmetic function</span>
+<span class="hljs-comment">// by hand, but since .NET provides it, that would be a waste of time</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> <span class="hljs-title">Add</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> i, <span class="hljs-built_in">int</span> j</span>) <span class="hljs-comment">// i is the first value, j is the second value</span></span>
+{
+    <span class="hljs-comment">// this statement performs the add functionality using the + operator on the two</span>
+    <span class="hljs-comment">// parameter values, and then returns the result to the calling function</span>
+    <span class="hljs-keyword">return</span> i + j;
+}
+</code></pre>
+<p>This is an extreme case, but a fairly common one. Comments stop doing their job when their volume is comparable to the volume of the code. They tell you nothing new at all and only clutter the limited information space of a single screen. It's easy to fall into the opposite extreme and write magic code that contains not a single literary flourish but does hold the ultimate <a href="https://en.wikipedia.org/wiki/42_(number)#The_Hitchhiker's_Guide_to_the_Galaxy" target="_blank" rel="noopener">answer to the ultimate question of life, the universe, and everything</a>:</p>
+<pre class="hljs"><code class="language-c">next = next * <span class="hljs-number">1103515245</span> + <span class="hljs-number">12345</span>;
+<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> r = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)(next / <span class="hljs-number">65536</span>) % <span class="hljs-number">32768</span>);
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;r = %u\n&quot;</span>, r);
+</code></pre>
+<p>Everything in this code is fine, except that it's not very clear what it does. A lonely comment saves the day:</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-comment">// calculate next pseudorandom number</span>
+next = next * <span class="hljs-number">1103515245</span> + <span class="hljs-number">12345</span>;
+<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> r = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)(next / <span class="hljs-number">65536</span>) % <span class="hljs-number">32768</span>);
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;r = %u\n&quot;</span>, r);
+</code></pre>
+<p>There's a fleeting feeling that the goal has been achieved. A few lines of non-obvious code are accompanied by a comment that completely clarifies the situation. Could one wish for more? One could:</p>
+<pre class="hljs"><code class="language-c">unsinged <span class="hljs-type">int</span> <span class="hljs-title function_">random</span><span class="hljs-params">()</span>
+{
+  next = next * <span class="hljs-number">1103515245</span> + <span class="hljs-number">12345</span>;
+  <span class="hljs-keyword">return</span> ((<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)(next / <span class="hljs-number">65536</span>) % <span class="hljs-number">32768</span>);
+}
+
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;r = %u\n&quot;</span>, random());
+</code></pre>
+<p>It turns out that <strong>the best comment is no comment at all</strong>, because the code itself is the ideal comment — good code, at least. Every time you feel the indecent urge to write a comment, it's a sure sign that refactoring is needed here. A rule of thumb crystallized in my head long ago: <em>the number of words in any given comment is proportional to the probability of its deletion in the foreseeable future</em>. As a friend of mine says: &quot;trust me&quot;. But don't forget that all generalizations are dangerous, even… well, you know.</p>
+<p>All this fits nicely with the classic programmer joke in which Sherlock Holmes and his colleague Watson, flying in a hot-air balloon, ask a lonely goatherd where they are. &quot;In a hot-air balloon, sir.&quot; Holmes concluded that the man was a programmer, because, first, he gave an absolutely precise answer and, second, an absolutely useless one. I feel the same emotions when I see something like this:</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-comment">// increment value by one</span>
+i++;
+</code></pre>
+<p>For those reading these lines, English is most likely not a native language. That adds extra problems. It's one thing to master the keywords and write concise programs, quite another to compose sensible comments in the native tongue of the English queen. It often happens that you think in Russian, compose a statement in your head that describes the matter precisely, but the difficulties of translation make their adjustments, and in the end a splendid statement turns into a tautology. Self-documenting code wins again, since it lets you keep comments to a minimum — but of course that doesn't remove the problem of naming variables, functions, classes and other structural units.</p>
+<p><img src="/blog/images/code-comments-1.png" alt="commented" loading="lazy"></p>
+<p>Comments, like all other obvious and convenient things, had to be invented by someone. I wondered whether history remembers the first comment in source code. I tried to find material, but nothing came of it. Most likely the claim to being first can always be disputed, and the question itself doesn't make much sense. But probably no one will argue that the golden age of comments fell on the years of assembly language's undivided rule. After all, endless sheets of monotonous code without human remarks were simply impossible to take in.</p>
+<p>The situation improved dramatically with the arrival of C-like languages. From then on, code began to resemble a digestible story rather than Maya manuscripts encrypted with an Enigma machine. Accordingly, the role of comments shrank as well, since programmers acquired new and powerful means of expression. The arrival of object-oriented languages only reinforced the trend.</p>
+<p>I've offered these last musings in support of the idea that modern languages generally provide enough expressive means to write understandable code without the customary comments. Only one thing remains: use those means and make the world a better place. There's a good piece of advice: write code as if it will be read by a serial killer maniac. It may well be that an inappropriate comment is the last straw.</p>
+<p>For those who have tender feelings for comments, I can recommend visiting this discussion: <a href="http://stackoverflow.com/questions/184618/what-is-the-best-comment-in-source-code-you-have-ever-encountered" target="_blank" rel="noopener">&quot;What is the best comment in source code you have ever encountered?&quot;</a>. That's where I got the title for this post, and that's also where I took the following quote:</p>
+<pre class="hljs"><code class="language-c"><span class="hljs-comment">//</span>
+<span class="hljs-comment">// Dear maintainer:</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-comment">// Once you are done trying to &#x27;optimize&#x27; this routine,</span>
+<span class="hljs-comment">// and have realized what a terrible mistake that was,</span>
+<span class="hljs-comment">// please increment the following counter as a warning</span>
+<span class="hljs-comment">// to the next guy:</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-comment">// total_hours_wasted_here = 42</span>
+<span class="hljs-comment">//</span>
+</code></pre>
+</div>
+  <div class="links end"><a class="btn" href="/blog/ru/code-comments/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/45067.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+  <nav class="pager"><a href="/blog/per-aspera-ad-astra/">← Per Aspera ad Astra</a><a href="/blog/obfuscated/">OBFUSCATED →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Analytical Engine — Mike Smahin</title>
+<meta name="description" content="../../images/analytical-engine-1.jpg Charles Babbage was a true genius of his time, a brilliant inventor, a hero straight out of Goethe : he was ready to sell h">
+<link rel="canonical" href="https://iodiot.github.io/blog/analytical-engine/">
+<link rel="alternate" hreflang="ru" href="https://iodiot.github.io/blog/ru/analytical-engine/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/">← All posts</a></p>
+    <h1>The Analytical Engine</h1>
+    <p class="meta-line"><time datetime="2007-08-09">Aug 9, 2007</time></p>
+    <ul class="tags"><li class="topic">mathematics</li><li>computer science</li><li>computers</li><li>math</li><li>essay</li></ul>
+    <div class="links"><a class="btn" href="/blog/ru/analytical-engine/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/4795.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+    <p class="note">Translated from Russian. Originally published on Aug 9, 2007 as “Аналитическая машина”.</p>
+  </header>
+  <div class="prose"><p><img src="/blog/images/analytical-engine-1.jpg" alt="" loading="lazy"></p>
+<p><strong>Charles Babbage</strong> was a true genius of his time, a brilliant inventor, a hero straight out of <strong>Goethe</strong>: he was ready to sell his soul to the devil just to peek &quot;behind the scenes&quot; of the universe. We remember him for the &quot;Analytical Engine&quot;. Following in the footsteps of the great <strong>Pascal</strong>, he tried to bring to life the thing that today gathers dust in every home. And while the former invented no more than an elaborate abacus, Babbage was many years ahead of his time and anticipated the creation of computing machines.</p>
+<p>Like many great scientists, Babbage saw the root of evil in one thing — inaccurate calculations. In those days people usually relied on tables of precomputed values of various functions. Need the sine of 23 degrees? Open page 32. The table values were computed by people with pen and paper; people made mistakes, the mistakes accumulated, and Babbage was indignant. After he discussed the problem with the astronomer <strong>Herschel</strong> yet again, his patience ran out. By then he already had a couple of papers that carefully analyzed the losses the state suffered because of &quot;bad&quot; numbers, and he decided to put an end to the problem once and for all.</p>
+<p>After long and painful searching he came up with the idea of the &quot;Difference Engine&quot;. The machine was supposed to compute the values of some function at successive points — for example, <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">f(x) = x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></eq> for <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>1..10</mn></mrow><annotation encoding="application/x-tex">x = 1..10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1..10</span></span></span></span></eq>. Several questions immediately arise, all boiling down to one: &quot;How do you make a heap of scrap metal do that?&quot; Even today, with a PC and a programming language, we would have to write some sort of recursive expression analyzer (a parser), solve the problem of representing transcendental functions (sine, logarithm), and then compute all the values in a loop. Fortunately, the second problem had been solved long before Babbage, by <strong>Taylor</strong> series. How he solved the first one is what I'll try to explain here; the last one we'll leave to the mechanics.</p>
+<p>Take the simplest function, <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>a</mi><mi>x</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">f(x) = ax + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></eq>, and build this table:</p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>f(x)</th>
+<th>Δf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>a·1+b</td>
+<td>a</td>
+</tr>
+<tr>
+<td>2</td>
+<td>a·2+b</td>
+<td>a</td>
+</tr>
+<tr>
+<td>3</td>
+<td>a·3+b</td>
+<td>a</td>
+</tr>
+<tr>
+<td>4</td>
+<td>a·4+b</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<p>The third column is built using the formula <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>f</mi><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mi>h</mi><mo stretchy="false">)</mo><mo>−</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Delta f = f(x+h) - f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">h</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></eq> with <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>; it represents the average rate of change of the function, which is constant for a linear function. If we let <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span></span></span></span></eq> tend to zero, we get the differential, which is related to <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">\Delta f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span></span></span></span></eq> as <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>f</mi><mo>=</mo><mo stretchy="false">(</mo><msup><mi>f</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>+</mo><mi>ε</mi><mo stretchy="false">)</mo><mtext> </mtext><mi>h</mi></mrow><annotation encoding="application/x-tex">\Delta f = (f&#x27;(x) + \varepsilon)\,h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ε</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">h</span></span></span></span></eq>, i.e. differs from <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">\Delta f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span></span></span></span></eq> by an infinitesimal of higher order. In our elementary example it's clear that to get the value at the next point it's enough to add the constant <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></eq>. There it is — <strong>the main idea</strong>. If we have a polynomial of degree <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></eq>, we can build all the differences up to order <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></eq> and then compute recursively. Let's clarify with an example.</p>
+<p>Suppose we want to compute the values of <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>x</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">f(x) = x^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></eq> at the points <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>2..2.5</mn></mrow><annotation encoding="application/x-tex">x = 2..2.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2..2.5</span></span></span></span></eq> with step <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">h = 0.1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.1</span></span></span></span></eq>. Now we build a table:</p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>f(x)</th>
+<th>Δf</th>
+<th>Δ²f</th>
+<th>Δ³f</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>8.000</td>
+<td>1.261</td>
+<td>0.126</td>
+<td>0.006</td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>9.261</td>
+<td>1.387</td>
+<td>0.132</td>
+<td>0.006</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>10.648</td>
+<td>1.519</td>
+<td>0.138</td>
+<td>0.006</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>12.167</td>
+<td>1.657</td>
+<td>0.144</td>
+<td>–</td>
+</tr>
+<tr>
+<td>2.4</td>
+<td>13.824</td>
+<td>1.801</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>2.5</td>
+<td>15.625</td>
+<td>–</td>
+<td>–</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<p>As the table shows, the values in the last column are all the same, and that is good. It means we only need to compute the values of the first row (by hand) and can then move on row by row. Here is <strong>the rule</strong>: the value in a given cell equals the sum of the values in the cell above and the cell above-right. For example:</p>
+<p>9.261 = 8.000 + 1.261;</p>
+<p>1.387 = 1.261 + 0.126;</p>
+<p>0.132 = 0.126 + 0.006.</p>
+<p>That is exactly what Babbage implemented, and that is why his machine was called the difference (or analytical) engine. It's worth noting that his machine had only 8 memory cells, so it could only evaluate polynomials of degree <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">n \le 8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8</span></span></span></span></eq>. Each cell was represented by 31 gears and could hold a value the size of a double word. The machine was supposed to run on steam; it was the scientist's son who eventually got it working.</p>
+<p>An interesting fact is that already in those years Babbage correctly guessed the architecture of future computers. Only his processor was called the mill, the memory — the store, and the bus was a prototype of <strong>Ford</strong>'s assembly line. But how could one ask more of him?</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/ru/analytical-engine/">Original (RU)</a><a class="btn" href="https://iodiot.livejournal.com/4795.html" target="_blank" rel="noopener">LiveJournal ↗</a></div>
+  <nav class="pager"><a href="/blog/a-cute-formula/">← A Cute Formula</a><a href="/blog/leaf-gif/">leaf.gif →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>

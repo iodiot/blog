@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Что в номере твоём? — Mike Smahin</title>
+<meta name="description" content="Интересно , а кто-то пытался статистически анализировать номера, которые живой журнал назначает новым записям. Неважно. Это попробую сделать я : В моём журнале ">
+<link rel="canonical" href="https://iodiot.github.io/blog/ru/whats-in-your-number/">
+<link rel="alternate" hreflang="en" href="https://iodiot.github.io/blog/whats-in-your-number/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/assets/katex/katex.min.css">
+<link rel="stylesheet" href="/blog/assets/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav">
+  <a class="brand" href="/">Mike Smahin</a>
+  <nav>
+    <a href="/blog/">Blog</a>
+    <a href="/blog/ru/">По-русски</a>
+    <a href="/#writing">Portfolio</a>
+  </nav>
+</header>
+<main>
+<article class="post">
+  <header class="post-head">
+    <p class="eyebrow"><a href="/blog/ru/">← Все записи</a></p>
+    <h1>Что в номере твоём?</h1>
+    <p class="meta-line"><time datetime="2008-01-05">5 января 2008</time></p>
+    <ul class="tags"><li class="topic">математика</li><li>жж</li></ul>
+    <div class="links"><a class="btn" href="/blog/whats-in-your-number/">English version</a><a class="btn" href="https://iodiot.livejournal.com/18998.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+    
+  </header>
+  <div class="prose"><p><strong>Интересно</strong>, а кто-то пытался статистически анализировать номера, которые живой журнал назначает новым записям. Неважно. Это попробую сделать я :)</p>
+<p>В моём журнале всего 60 с лишним постов, ссылка на предпоследний из них выглядит следующим образом – <em><a href="http://iodiot.livejournal.com/18857.html" target="_blank" rel="noopener">http://iodiot.livejournal.com/18857.html</a></em>. Соответственно, уникальный номер этой записи – 18857. Наверное, вы уже замечали, что цифры достаточно большие. Скорее всего, это было сделано умышленно для психологического комфорта блоггеров, <em>useability</em> так сказать.</p>
+<p>Номера постов монотонно возрастают, но идут не подряд, т.е. значения соседних записей отличаются <strong>не</strong> на единицу. Это логично. Потому что в противном случае, к примеру, я захожу на незнакомый журнал и вижу два последних поста с номерами 98 и 100, и почти определённо могу сказать, что между ними (т.е. в данном отрезке времени) существует или скрытая запись, или была старая, которую безвозвратно удалили. <em>Privacy</em> мать его.</p>
+<p>Ближе к телу. Возьмём номера моих последних 50 записей, вот они:</p>
+<pre class="hljs"><code> 4795   4956   5194   5687   6132   6610   6717
+ 7074   7479   7699   8181   8446   8630   8951
+ 9034   9222   9617   9775  10237  10435  10547
+10863  11121  11399  11762  11814  12084  12337
+12761  13156  13378  13593  13988  14271  14433
+14672  15016  15277  15360  15831  15893  16230
+16581  16894  16998  17270  17974  18384  18540
+18857
+</code></pre>
+<p>Что делать с этими цифрами я не знаю. Поэтому возьмём разности между соседними номерами, теперь их всего 49:</p>
+<pre class="hljs"><code>161  238  493  445  478  107  357  405  220  482  265  184  321   83  188
+395  158  462  198  112  316  258  278  363   52  270  253  424  395  222
+215  395  283  162  239  344  261   83  471   62  337  351  313  104  272
+704  410  156  317
+</code></pre>
+<p>Вот это уже интереснее. Начнём с простого: подсчитаем максимум, минимум, мат. ожидание, дисперсию и построим гистограмму распределения значений:</p>
+<pre class="hljs"><code>max = 704
+min =  52
+mx  = 286.9796
+sx  = 136.0748
+dx  = 1.8516e+004
+</code></pre>
+<p>Что-то <strong>max</strong> уж слишком большой вышел, скажу вам по секрету: записи я удалял. К слову, <strong>min</strong> также странен. Интересно ещё, почему такое больше <strong>mx</strong>, т.е. мат. ожидание, может в идеале это была восьмая степень двойки.</p>
+<p>А теперь построим гистограмму, которая просто-напросто отображает, сколько элементов из выборки попали в тот или иной интервал. Зачем? Проверим одно предположение, что движок ЖЖ генерирует номера новых записей следующим образом: берётся номер последней записи на данный момент, и с помощью генератора случайных чисел к нему прибавляется другое число, равное rand(). А <strong>гипотеза</strong> в том, что  генератор, т.е. сама функция rand(), подчиняется <em>нормальному закону распределения</em> (или распределению <strong>Гаусса</strong>). Гистограмма, конечно же, ничего не доказывает, но визуализирует уж точно:</p>
+<p><img src="/blog/images/whats-in-your-number-1.gif" alt="" loading="lazy"></p>
+<p>Неоднозначный результат. Тогда натравим поочерёдно критерии <strong>Колмогорова</strong> и <strong>Пирсона</strong> для проверки нашей гипотезы. Напомню, что проверяем нормальность распределения. Критерий Колмогорова ищет максимальную разность между экспериментальным и теоретическим распределениями, и в данном случае разность равна 1 и <strong>Matlab</strong> говорит, что дело гиблое. Пирсон с ним солидарен, вот <em>output</em> кому интересно:</p>
+<pre class="hljs"><code>test = 0
+stats =
+    chi2stat: 2.4727
+    df: 3
+    edges: [1x7 double]
+    O: [14 5 7 4 5 15]
+    E: [12.0782 6.0285 6.8087 6.8187 6.0550 12.2108]
+</code></pre>
+<p><strong>Резюмируя</strong>. Номера записей движок живого журнала генерирует с умом: <em>privacy</em> и <em>useability</em> тесты пройдены. Но гипотеза, что ЖЖ использует генератор случайных чисел, подчиняющийся <em>нормальному закону</em> – не подтвердилась. Правда всё дело может быть в том, что выборка слабоватая и не представительная, и, что исторически удалённые записи внесли свою дисперсию…</p>
+<p><strong>[update]</strong> Совместными усилиями с <a href="https://amikhailov.livejournal.com/" target="_blank" rel="noopener">amikhailov</a> мы нашли алгоритм генерации номеров новых записей. Всё дело в том, что для этого используются порядковые номера постов в журнале, т.е. 1, 2, 3... В общем, вот формула:</p>
+<pre class="hljs"><code class="language-c">post_number = (prev_post_order + <span class="hljs-number">1</span>) * <span class="hljs-number">256</span> + rand(<span class="hljs-number">256</span>);
+</code></pre>
+<p>Другими словами, берётся порядковый номер предыдущей записи, к нему прибавляется единица, всё это умножается на 256, а потом к полученному числу прибавляется случайное число из диапазона 0..255. К примеру, номера первой и второй записей будут 1*256  + rand(256) и 2*256 + rand(256) соответственно.</p>
+</div>
+  <div class="links end"><a class="btn" href="/blog/whats-in-your-number/">English version</a><a class="btn" href="https://iodiot.livejournal.com/18998.html" target="_blank" rel="noopener">Запись в ЖЖ ↗</a></div>
+  <nav class="pager"><a href="/blog/ru/philosophy-of-programs/">← Философия программ</a><a href="/blog/ru/elegant-whitespace/">Изящный пробел →</a></nav>
+</article>
+</main>
+<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+</body>
+</html>
