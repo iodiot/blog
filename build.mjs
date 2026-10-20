@@ -12,8 +12,8 @@ const OUT = path.join(ROOT, 'dist');
 const BASE = '/blog/';
 const SITE = 'https://iodiot.github.io';
 
-const md = new MarkdownIt({
-  html: false, linkify: true, typographer: false,
+const makeMd = (html) => new MarkdownIt({
+  html, linkify: true, typographer: false,
   highlight(code, lang) {
     if (lang && lang !== 'text' && hljs.getLanguage(lang)) {
       return `<pre class="hljs"><code class="language-${lang}">${hljs.highlight(code, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
@@ -21,10 +21,13 @@ const md = new MarkdownIt({
     return `<pre class="hljs"><code>${md.utils.escapeHtml(code)}</code></pre>`;
   },
 }).use(texmath, { engine: katex, delimiters: 'dollars', katexOptions: { throwOnError: false } });
+const md = makeMd(false);     // archive posts: no raw HTML
+const mdT = makeMd(true);     // tutorials: allow <figure>, <iframe> for diagrams and live demos
 
 // open external links in new tab
-const defaultLink = md.renderer.rules.link_open || ((t, i, o, e, s) => s.renderToken(t, i, o));
-md.renderer.rules.link_open = (tokens, idx, opts, env, self) => {
+for (const m of [md, mdT]) {
+const defaultLink = m.renderer.rules.link_open || ((t, i, o, e, s) => s.renderToken(t, i, o));
+m.renderer.rules.link_open = (tokens, idx, opts, env, self) => {
   const href = tokens[idx].attrGet('href') || '';
   if (/^https?:\/\//.test(href) && !href.startsWith(SITE)) {
     tokens[idx].attrSet('target', '_blank');
@@ -32,11 +35,12 @@ md.renderer.rules.link_open = (tokens, idx, opts, env, self) => {
   }
   return defaultLink(tokens, idx, opts, env, self);
 };
-md.renderer.rules.image = (tokens, idx, opts, env, self) => {
+m.renderer.rules.image = (tokens, idx, opts, env, self) => {
   const t = tokens[idx];
   const src = t.attrGet('src'); const alt = self.renderInlineAsText(t.children, opts, env);
-  return `<img src="${src}" alt="${md.utils.escapeHtml(alt)}" loading="lazy">`;
+  return `<img src="${src}" alt="${m.utils.escapeHtml(alt)}" loading="lazy">`;
 };
+}
 
 function parse(file) {
   const raw = fs.readFileSync(file, 'utf8');
@@ -64,6 +68,15 @@ for (const f of fs.readdirSync(path.join(ROOT, 'posts/ru')).filter(f => f.endsWi
   });
 }
 posts.sort((a, b) => b.date.localeCompare(a.date));
+
+// New English-only tutorials (posts/tutorials/<slug>.md), listed above the archive
+const tutorials = [];
+const TDIR = path.join(ROOT, 'posts/tutorials');
+for (const f of (fs.existsSync(TDIR) ? fs.readdirSync(TDIR) : []).filter(f => f.endsWith('.md'))) {
+  const t = parse(path.join(TDIR, f));
+  tutorials.push({ slug: f.replace(/\.md$/, ''), ...t.meta, tags: t.meta.tags || [], body: t.body });
+}
+tutorials.sort((a, b) => b.date.localeCompare(a.date));
 const ljToSlug = Object.fromEntries(posts.map(p => [p.lj.match(/(\d+)\.html/)[1], p.slug]));
 
 function fixLinks(body, lang) {
@@ -82,7 +95,9 @@ function fmtDate(iso, lang) {
 const TOPIC = { en: { programming: 'programming', mathematics: 'mathematics', physics: 'physics & space' },
                 ru: { programming: 'программирование', mathematics: 'математика', physics: 'физика и космос' } };
 
-function layout({ lang, title, desc, body, canonical, alt }) {
+const FOOT_ARCHIVE = `© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a>`;
+const FOOT_NEW = `© Mike Smahin · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a>`;
+function layout({ lang, title, desc, body, canonical, alt, foot = FOOT_ARCHIVE }) {
   return `<!doctype html>
 <html lang="${lang}">
 <head>
@@ -94,7 +109,7 @@ function layout({ lang, title, desc, body, canonical, alt }) {
 ${alt ? `<link rel="alternate" hreflang="${alt.lang}" href="${SITE}${alt.href}">` : ''}
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d12'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' text-anchor='middle' fill='%237cf5d4'%3Eio%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="${BASE}assets/katex/katex.min.css">
-<link rel="stylesheet" href="${BASE}assets/style.css">
+<link rel="stylesheet" href="${BASE}assets/style.css?v=2">
 </head>
 <body>
 <div class="bg"></div>
@@ -109,7 +124,7 @@ ${alt ? `<link rel="alternate" hreflang="${alt.lang}" href="${SITE}${alt.href}">
 <main>
 ${body}
 </main>
-<footer class="foot"><p>© Mike Smahin · Originally published on <a href="https://iodiot.livejournal.com/" target="_blank" rel="noopener">iodiot.livejournal.com</a> (2007–2012) · <a href="https://github.com/iodiot/blog" target="_blank" rel="noopener">source</a></p></footer>
+<footer class="foot"><p>${foot}</p></footer>
 </body>
 </html>
 `;
@@ -130,19 +145,31 @@ function indexPage(lang) {
       ${chips(p, lang)}
     </div>
   </li>`).join('');
+  const tlist = tutorials.map(t => `
+  <li class="post-item">
+    <time datetime="${t.date.slice(0, 10)}">${fmtDate(t.date, 'en')}</time>
+    <div>
+      <a class="post-title" href="${BASE}${t.slug}/">${esc(t.title)}</a>
+      <ul class="tags"><li class="topic">tutorial</li>${t.tags.slice(0, 4).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    </div>
+  </li>`).join('');
+  const tsec = !tutorials.length ? '' : lang === 'en'
+    ? `<section class="list tutorials"><p class="eyebrow">New · Tutorials</p><h2 class="list-h">Three.js, WebGL &amp; WebGPU</h2><p class="list-lead">A step-by-step series on 3D for the web, with live demos.</p><ul class="posts">${tlist}</ul></section>`
+    : `<section class="list tutorials"><p class="eyebrow">Новое · Туториалы</p><h2 class="list-h">Three.js, WebGL и WebGPU</h2><p class="list-lead">Серия статей о 3D в браузере, с живыми демо. Пока только на английском.</p><ul class="posts">${tlist}</ul></section>`;
+  const archH = !tutorials.length ? '' : `<p class="eyebrow">${lang === 'en' ? 'Archive · 2007–2012' : 'Архив · 2007–2012'}</p>`;
   const counts = ['programming', 'mathematics', 'physics'].map(t => `${posts.filter(p => p.topic === t).length} ${TOPIC[lang][t]}`).join(' · ');
   const intro = lang === 'en'
-    ? `<p class="eyebrow">Blog · 2007–2012</p><h1>Notes on math, physics &amp; programming</h1>
-       <p class="lead">${posts.length} posts I wrote in Russian on my old LiveJournal, translated into English. Every post links to its Russian original and to the LiveJournal entry.</p>
+    ? `<p class="eyebrow">Blog</p><h1>Notes on 3D, math, physics &amp; programming</h1>
+       <p class="lead">New tutorials on Three.js, WebGL and WebGPU, plus ${posts.length} posts I wrote in Russian on my old LiveJournal (2007–2012), translated into English. Every archive post links to its Russian original and to the LiveJournal entry.</p>
        <p class="meta-line">${counts} · <a href="${BASE}ru/">Читать по-русски</a></p>`
     : `<p class="eyebrow">Блог · 2007–2012</p><h1>Заметки о математике, физике и программировании</h1>
        <p class="lead">${posts.length} записей из моего старого ЖЖ — оригиналы с картинками и разметкой. У каждой есть английский перевод и ссылка на исходную запись.</p>
        <p class="meta-line">${counts} · <a href="${BASE}">Read in English</a></p>`;
   return layout({
     lang, title: lang === 'en' ? 'Blog — Mike Smahin' : 'Блог — Mike Smahin',
-    desc: lang === 'en' ? 'Old blog posts about mathematics, physics and programming, translated from Russian.' : 'Старые записи о математике, физике и программировании.',
+    desc: lang === 'en' ? 'Tutorials on Three.js, WebGL and WebGPU, and old blog posts about mathematics, physics and programming, translated from Russian.' : 'Старые записи о математике, физике и программировании.',
     canonical: `${BASE}${lang === 'ru' ? 'ru/' : ''}`, alt: { lang: other, href: `${BASE}${other === 'ru' ? 'ru/' : ''}` },
-    body: `<section class="hero">${intro}</section><section class="list"><ul class="posts">${list}</ul></section>`,
+    body: `<section class="hero">${intro}</section>${tsec}<section class="list">${archH}<ul class="posts">${list}</ul></section>`,
   });
 }
 
@@ -180,6 +207,27 @@ function postPage(p, lang) {
   });
 }
 
+function tutorialPage(t) {
+  const html = mdT.render(fixLinks(t.body, 'en'));
+  const plain = t.description || t.body.replace(/[#*_>`\[\]()!$\\]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160);
+  const series = t.series ? `<p class="note">Part ${esc(t.part || 1)} of the series “${esc(t.series)}”.</p>` : '';
+  const chipsT = `<ul class="tags"><li class="topic">tutorial</li>${t.tags.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  return layout({
+    lang: 'en', title: `${t.title} — Mike Smahin`, desc: plain, canonical: `${BASE}${t.slug}/`, foot: FOOT_NEW,
+    body: `<article class="post tutorial">
+  <header class="post-head">
+    <p class="eyebrow"><a href="${BASE}">← All posts</a></p>
+    <h1>${esc(t.title)}</h1>
+    <p class="meta-line"><time datetime="${t.date.slice(0, 10)}">${fmtDate(t.date, 'en')}</time> · Mike Smahin</p>
+    ${chipsT}
+    ${series}
+  </header>
+  <div class="prose">${html}</div>
+  <div class="links end"><a class="btn" href="${BASE}">← All posts</a><a class="btn" href="/">Portfolio</a></div>
+</article>`,
+  });
+}
+
 function write(rel, content) {
   const f = path.join(OUT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, content);
 }
@@ -187,6 +235,8 @@ fs.rmSync(OUT, { recursive: true, force: true });
 write('index.html', indexPage('en'));
 write('ru/index.html', indexPage('ru'));
 for (const p of posts) { write(`${p.slug}/index.html`, postPage(p, 'en')); write(`ru/${p.slug}/index.html`, postPage(p, 'ru')); }
+for (const t of tutorials) write(`${t.slug}/index.html`, tutorialPage(t));
+if (fs.existsSync(path.join(ROOT, 'demos'))) fs.cpSync(path.join(ROOT, 'demos'), path.join(OUT, 'demos'), { recursive: true });
 fs.cpSync(path.join(ROOT, 'images'), path.join(OUT, 'images'), { recursive: true });
 fs.cpSync(path.join(ROOT, 'site/style.css'), path.join(OUT, 'assets/style.css'));
 const kd = path.join(ROOT, 'node_modules/katex/dist');
@@ -195,4 +245,4 @@ fs.cpSync(path.join(kd, 'katex.min.css'), path.join(OUT, 'assets/katex/katex.min
 fs.cpSync(path.join(kd, 'fonts'), path.join(OUT, 'assets/katex/fonts'), { recursive: true });
 write('.nojekyll', '');
 write('404.html', layout({ lang: 'en', title: 'Not found', desc: '', canonical: BASE, body: `<section class="hero"><h1>404</h1><p class="lead"><a href="${BASE}">Back to the blog</a></p></section>` }));
-console.log(`built ${posts.length} posts × 2 languages -> dist/`);
+console.log(`built ${posts.length} posts × 2 languages + ${tutorials.length} tutorial(s) -> dist/`);

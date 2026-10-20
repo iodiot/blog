@@ -1,15 +1,27 @@
-# Blog — math, physics & programming
+# Blog — 3D, math, physics & programming
 
 **Live:** https://iodiot.github.io/blog/ · [по-русски](https://iodiot.github.io/blog/ru/)
+
+## Tutorials: Three.js, WebGL & WebGPU
+
+A new step-by-step series on 3D for the web, in English, with live demos.
+
+| Date | Article | Demo |
+|---|---|---|
+| 2026-10-20 | [Three.js from Scratch, Part 1: Your First Scene](https://iodiot.github.io/blog/threejs-first-scene/) | [live](https://iodiot.github.io/blog/demos/threejs-01/) · [code](demos/threejs-01/) |
+
+## Archive
 
 Posts I wrote in Russian on my LiveJournal ([iodiot.livejournal.com](https://iodiot.livejournal.com/)) between 2007 and 2012, restored with their original formatting and images, plus English translations. Only the posts about mathematics, physics and programming are here.
 
 ## Layout
 
 ```
+posts/tutorials/<slug>.md  new English-only articles (Markdown + inline HTML for figures and demos)
+demos/<name>/              standalone live demos used by the tutorials, copied as-is
 posts/ru/<slug>.md   original post (Markdown, front matter keeps date, tags, LiveJournal URL)
 posts/en/<slug>.md   English translation
-images/              all images, downloaded from the original posts
+images/              all images (archive posts: downloaded from the originals; images/threejs-01/: tutorial diagrams and screenshots)
 site/style.css       styles
 build.mjs            static site builder (markdown-it + KaTeX + highlight.js)
 ```
