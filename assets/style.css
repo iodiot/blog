@@ -86,3 +86,16 @@ pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5p
   Current colors taken from GitHub's CSS
 */.hljs{color:#c9d1d9;background:#0d1117}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}.prose section{padding:0;margin:1.2em 0;overflow-x:auto;overflow-y:hidden}
 .prose eqn{display:block}
+/* tutorials */
+section.list.tutorials{padding:8px 0 24px}
+.list .eyebrow{margin:0 0 12px}
+.list-h{display:block;margin:0 0 6px;font-size:clamp(22px,3vw,28px)}
+.list-lead{margin:0 0 18px;color:var(--muted)}
+.prose h2{margin:2.2em 0 .6em;font-size:clamp(23px,3vw,28px);letter-spacing:-.02em;line-height:1.2}
+.prose h3{margin:1.8em 0 .5em;font-size:20px;letter-spacing:-.01em}
+.prose figure{margin:1.8em 0}
+.prose figure img{margin:0 auto;background:transparent;max-height:none;width:100%;height:auto}
+.prose figcaption{margin-top:10px;color:var(--dim);font-size:14px;line-height:1.5;text-align:center}
+.prose .demo{position:relative;margin:1.6em 0 .6em;aspect-ratio:16/10;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000}
+.prose .demo iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.prose .demo-links{margin:0 0 1.6em;font-size:14px;color:var(--dim)}
